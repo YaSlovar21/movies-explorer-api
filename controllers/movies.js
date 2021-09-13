@@ -13,7 +13,7 @@
 // createMovie,
 // deleteMovie,
 
-const Card = require('../models/card');
+const Movie = require('../models/movie');
 
 const {
   BadRequestError400,
@@ -21,9 +21,9 @@ const {
   ForbiddenError403,
 } = require('../errors/errors');
 
-module.exports.getCards = (req, res, next) => {
-  Card.find({})
-    .then((cards) => res.send(cards))
+module.exports.getMovies = (req, res, next) => {
+  Movie.find({})
+    .then((movies) => res.send(movies))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError400('Ошибка валидации ID'));
@@ -32,10 +32,35 @@ module.exports.getCards = (req, res, next) => {
     });
 };
 
-module.exports.createCard = (req, res, next) => {
-  const { name, link } = req.body;
+module.exports.createMovie = (req, res, next) => {
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+  } = req.body;
   const owner = req.user._id;
-  Card.create({ name, link, owner })
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailer,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner,
+  })
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -49,11 +74,11 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
-    .orFail(new NotFoundError404('Такой карточки нет'))
-    .then((card) => {
-      if (card.owner.toString() === req.user._id) {
-        Card.deleteOne(card)
+  Movie.findById(req.params.cardId)
+    .orFail(new NotFoundError404('Такого фильма нет'))
+    .then((movie) => {
+      if (movie.owner.toString() === req.user._id) {
+        Movie.deleteOne(movie)
           .then((deletedCard) => {
             res.send(deletedCard);
           });
@@ -62,40 +87,4 @@ module.exports.deleteCard = (req, res, next) => {
       }
     })
     .catch(next);
-};
-
-module.exports.likeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    { new: true },
-  )
-    .orFail(() => {
-      throw new NotFoundError404('Такой карточки нет');
-    })
-    .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError400('Ошибка валидации ID'));
-      }
-      next(err);
-    });
-};
-
-module.exports.removeLikeFromCard = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $pull: { likes: req.user._id } },
-    { new: true },
-  )
-    .orFail(() => {
-      throw new NotFoundError404('Такой карточки нет');
-    })
-    .then((card) => res.send(card))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError400('Ошибка валидации ID'));
-      }
-      next(err);
-    });
 };

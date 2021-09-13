@@ -21,11 +21,11 @@ const {
 const User = require('../models/user');
 
 module.exports.updateProfile = (req, res, next) => {
-  const { name, about } = req.body;
+  const { name, email } = req.body;
   const userId = req.user._id;
   User.findByIdAndUpdate(
     userId,
-    { name, about },
+    { name, email },
     { new: true, runValidators: true },
   )
     .orFail(() => {
