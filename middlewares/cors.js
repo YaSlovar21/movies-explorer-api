@@ -1,6 +1,6 @@
 const allowedCors = [
-  'https://yaslovar.students.nomoredomains.rocks',
-  'http://yaslovar.students.nomoredomains.rocks',
+  'https://yamovies.students.nomoredomains.rocks',
+  'http://yamovies.students.nomoredomains.rocks',
   'http://localhost:3000',
 ];
 
