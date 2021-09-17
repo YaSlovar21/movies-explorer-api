@@ -12,11 +12,9 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 const rateLimiter = rateLimit({
-  windowMs: 15*60*1000,
+  windowMs: 15 * 60 * 1000,
   max: 100,
 });
-
-const val = require('validator');
 
 // мои мидлвары
 const auth = require('./middlewares/auth');
@@ -38,7 +36,6 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
 mongoose.connect('mongodb://localhost:27017/moviesdb', {
   useNewUrlParser: true,
   useCreateIndex: true,
@@ -57,7 +54,7 @@ app.post('/signin', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
-}), login)
+}), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
@@ -65,7 +62,7 @@ app.post('/signup', celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
-}), createUser)
+}), createUser);
 
 // мидл защиты роута авторизацией
 app.use(auth);
