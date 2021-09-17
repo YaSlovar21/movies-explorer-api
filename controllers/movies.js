@@ -73,7 +73,7 @@ module.exports.createMovie = (req, res, next) => {
     });
 };
 
-module.exports.deleteCard = (req, res, next) => {
+module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.cardId)
     .orFail(new NotFoundError404('Такого фильма нет'))
     .then((movie) => {

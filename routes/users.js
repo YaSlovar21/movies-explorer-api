@@ -14,8 +14,10 @@ const {
   // .. контроллеры users
   getCurrentUser,
   updateProfile,
-} = require('../controllers/movies');
+} = require('../controllers/users');
 
 router.get('/me', getCurrentUser);
 
 router.patch('/me', validateUserProfile, updateProfile);
+
+module.exports = router;
