@@ -3,7 +3,7 @@ const val = require('validator');
 
 const validateMovieId = celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().length(24).hex().alphanum(),
+    movieId: Joi.string().length(24).hex().alphanum(),
   }),
 });
 
