@@ -61,7 +61,7 @@ module.exports.createMovie = (req, res, next) => {
     movieId,
     owner,
   })
-    .then((card) => res.send(card))
+    .then((movie) => res.send(movie))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new BadRequestError400('Ошибка валидации ID'));
@@ -74,13 +74,13 @@ module.exports.createMovie = (req, res, next) => {
 };
 
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.cardId)
+  Movie.findById(req.params.movieId)
     .orFail(new NotFoundError404('Такого фильма нет'))
     .then((movie) => {
       if (movie.owner.toString() === req.user._id) {
         Movie.deleteOne(movie)
-          .then((deletedCard) => {
-            res.send(deletedCard);
+          .then((deletedMovie) => {
+            res.send(deletedMovie);
           });
       } else {
         next(new ForbiddenError403('Нет прав для удаления данной карточки'));
