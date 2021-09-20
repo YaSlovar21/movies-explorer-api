@@ -39,6 +39,9 @@ module.exports.updateProfile = (req, res, next) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError400('Новые данные не соответствуют формату'));
       }
+      if (err.name === 'MongoError' && err.code === 11000) {
+        next(new DuplicateKeyError409('Пользователь с введенным E-mail уже существует'));
+      }
       next(err);
     });
 };
@@ -70,8 +73,6 @@ module.exports.login = (req, res, next) => {
         .cookie('jwt', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }) // sameSite:true,
         .send({
           name: user.name,
-          about: user.about,
-          avatar: user.avatar,
           email: user.email,
         });
     })
