@@ -22,7 +22,7 @@ const {
 } = require('../errors/errors');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  Movie.find({ owner: req.user._id })
     .then((movies) => res.send(movies))
     .catch((err) => {
       if (err.name === 'CastError') {
